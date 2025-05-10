@@ -253,7 +253,7 @@ type PostData struct {
 	// List of posted parameters (in case of URL encoded parameters).
 	Params []*PostParam `json:"params"`
 	// Plain text posted data
-	Text string `json:"text"`
+	Text []byte `json:"text"`
 	// [optional] (new in 1.2) A comment provided by the user or the application.
 	Comment string `json:"comment,omitempty"`
 }
@@ -269,16 +269,15 @@ type pdBinary struct {
 
 // MarshalJSON returns a JSON representation of binary PostData.
 func (p *PostData) MarshalJSON() ([]byte, error) {
-	if utf8.ValidString(p.Text) {
-		// avoid infinite recursion
-		type noMethod PostData
-		return json.Marshal((*noMethod)(p))
+	encoding := "base64"
+	if utf8.Valid(p.Text) {
+		encoding = ""
 	}
 	return json.Marshal(pdBinary{
 		MimeType: p.MimeType,
 		Params:   p.Params,
-		Text:     []byte(p.Text),
-		Encoding: "base64",
+		Text:     p.Text,
+		Encoding: encoding,
 	})
 }
 
@@ -289,24 +288,13 @@ func (p *PostData) UnmarshalJSON(data []byte) error {
 	if bytes.Equal(data, []byte("null")) {
 		return nil
 	}
-	var enc struct {
-		Encoding string `json:"encoding"`
-	}
-	if err := json.Unmarshal(data, &enc); err != nil {
-		return err
-	}
-	if enc.Encoding != "base64" {
-		// avoid infinite recursion
-		type noMethod PostData
-		return json.Unmarshal(data, (*noMethod)(p))
-	}
 	var pb pdBinary
 	if err := json.Unmarshal(data, &pb); err != nil {
 		return err
 	}
 	p.MimeType = pb.MimeType
 	p.Params = pb.Params
-	p.Text = string(pb.Text)
+	p.Text = pb.Text
 	return nil
 }
 

@@ -531,7 +531,7 @@ func EntryToRequest(e *Entry, withCookie bool) (*http.Request, error) {
 	var body string
 	if req.PostData != nil {
 		if len(req.PostData.Params) == 0 {
-			body = req.PostData.Text
+			body = string(req.PostData.Text)
 		} else {
 			var form = make(url.Values)
 			for _, p := range req.PostData.Params {
@@ -695,7 +695,7 @@ func postData(req *http.Request, withBody bool) (*PostData, error) {
 		if err != nil {
 			return nil, err
 		}
-		pd.Text = string(body)
+		pd.Text = body
 	}
 	return pd, nil
 }
