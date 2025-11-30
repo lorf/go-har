@@ -443,7 +443,7 @@ func NewRequest(req *http.Request, withBody bool) (*Request, error) {
 		HTTPVersion: req.Proto,
 		Cookies:     cookies(req.Cookies()),
 		Headers:     headers(req.Header),
-		HeaderSize:  -1,
+		HeadersSize: -1,
 		BodySize:    req.ContentLength,
 		Comment:     "",
 	}

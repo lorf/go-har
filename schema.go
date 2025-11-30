@@ -176,7 +176,7 @@ type Request struct {
 	// Total number of bytes from the start of the HTTP request message until
 	// (and including) the double CRLF before the body. Set to -1 if the info
 	// is not available.
-	HeaderSize int64 `json:"headerSize"`
+	HeadersSize int64 `json:"headersSize"`
 	// Size of the request body (POST data payload) in bytes. Set to -1 if the
 	// info is not available.
 	BodySize int64 `json:"bodySize"`
