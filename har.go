@@ -238,7 +238,7 @@ func (h *Handler) AddResponse(id string, resp *http.Response) error {
 		nr.Comment = h.comment
 		e.Response = nr
 		t, _ := ParseISO8601(e.StartedDateTime)
-		e.Time = float64(time.Since(t).Microseconds())
+		e.Time = float64(time.Since(t).Nanoseconds()) / 1e6
 		for _, e := range h.har.Log.Entries {
 			if e.PageRef != "" && e.PageRef == id {
 				e.Response = nr
