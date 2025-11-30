@@ -172,7 +172,7 @@ type Request struct {
 	// List of query parameter objects.
 	QueryString []*NVP `json:"queryString"`
 	// Posted data info.
-	PostData *PostData `json:"postData"`
+	PostData *PostData `json:"postData,omitempty"`
 	// Total number of bytes from the start of the HTTP request message until
 	// (and including) the double CRLF before the body. Set to -1 if the info
 	// is not available.
@@ -181,7 +181,7 @@ type Request struct {
 	// info is not available.
 	BodySize int64 `json:"bodySize"`
 	// (new in 1.2) A comment provided by the user or the application.
-	Comment string `json:"comment"`
+	Comment string `json:"comment,omitempty"`
 }
 
 // Response contains detailed info about the response.
